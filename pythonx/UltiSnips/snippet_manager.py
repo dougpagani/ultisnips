@@ -54,6 +54,9 @@ def _show_user_warning(msg):
     vim_helper.command("echohl None")
 
 
+def _edit_snippet(snippet):
+    [ filepath, lineno ] = snippet.location.split(":")
+    vim.command('tabe ' + '+' + lineno + ' ' + filepath)
 def _ask_snippets(snippets):
     """Given a list of snippets, ask the user which one they want to use, and
     return it."""
@@ -256,7 +259,7 @@ class SnippetManager:
         if not snippet:
             return True
 
-        self._do_snippet(snippet, before)
+        _edit_snippet(snippet)
 
         return True
 
