@@ -1,0 +1,2 @@
+Add this so I don't have to maintain this stuff:
+https://github.com/marketplace/actions/fork-sync-with-upstream
