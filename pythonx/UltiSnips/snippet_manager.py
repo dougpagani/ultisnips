@@ -57,6 +57,8 @@ def _show_user_warning(msg):
 def _edit_snippet(snippet):
     [ filepath, lineno ] = snippet.location.split(":")
     vim.command('tabe ' + '+' + lineno + ' ' + filepath)
+    # vim.command('sp ' + '+' + lineno + ' ' + filepath)
+    vim.command('stopinsert')
 def _ask_snippets(snippets):
     """Given a list of snippets, ask the user which one they want to use, and
     return it."""
@@ -255,7 +257,11 @@ class SnippetManager:
         if not snippets:
             return True
 
-        snippet = _ask_snippets(snippets)
+        if len(snippets) > 1:
+            snippet = _ask_snippets(snippets)
+        else:
+            snippet = snippets[0]
+
         if not snippet:
             return True
 
