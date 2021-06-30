@@ -725,6 +725,22 @@ class SnippetManager:
     def _do_snippet(self, snippet, before):
         """Expands the given snippet, and handles everything that needs to be
         done with it."""
+
+        # vim.command("echom 'location: " + snippet.location + "'")
+        # vim.command("echom 'description: " + snippet.description + "'")
+        # vim.command("echom 'trigger: " + snippet.trigger + "'")
+        # vim.command("echom 'matched: " + snippet.matched + "'")
+
+# Example:
+# location: /Users/dougpa/.vim/UltiSnips/all/scratch.snippets:8
+# description: ((\w.*\w)\.par) "wrap word in parens"
+# trigger: (\w.*\w)\.par
+# matched: json.par
+
+
+        vim.command(":let g:UltiSnipsLastSnippetExecutedLocation = '" + snippet.location + "'")
+        vim.command(":let g:UltiSnipsLastSnippetExecutedDescription = '" + snippet.description + "'")
+
         self._setup_inner_state()
 
         self._snip_expanded_in_action = False
