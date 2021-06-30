@@ -17,13 +17,7 @@ def wrap(func):
         try:
             return func(self, *args, **kwds)
         except Exception as e:  # pylint: disable=bare-except
-            msg = """An error occured. This is either a bug in UltiSnips or a bug in a
-snippet definition. If you think this is a bug, please report it to
-https://github.com/SirVer/ultisnips/issues/new
-Please read and follow:
-https://github.com/SirVer/ultisnips/blob/master/CONTRIBUTING.md#reproducing-bugs
-
-Following is the full stack trace:
+            msg = """ULTISNIPS PYTHON STACK TRACE:
 """
 
             msg += traceback.format_exc()
