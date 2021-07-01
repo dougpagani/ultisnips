@@ -33,10 +33,15 @@ def _ask_user(a, formatted):
     None."""
     try:
         rv = vim_helper.eval("inputlist(%s)" % vim_helper.escape(formatted))
+
         import subprocess
         subprocess.run("pbcopy", universal_newlines=True, input=repr(rv))
+        #> '0'
+
         if rv is None:
             return None
+        if rv is '0': # specifically for the special option
+            return 'SPECIAL'
         rv = int(rv)
         if rv > len(a):
             rv = len(a)
@@ -75,9 +80,22 @@ def _ask_snippets(snippets):
     ]
 
 
+    # original:
     # return _ask_user(snippets, display)
-    # return _ask_user(["VIEW ALL", *snippets], ["0: VIEW ALL IN SEPARATE TABS", *display])
-    return _ask_user([*snippets, "VIEW ALL"], [*display, "{+1}: VIEW ALL IN SEPARATE TABS"])
+
+    selection = _ask_user(snippets, ["0: VIEW ALL IN SEPARATE TABS", *display])
+    if selection is "SPECIAL":
+        _edit_all(snippets)
+        return None # nothing else to do
+    else:
+        return selection
+
+    # RESULTS:
+    # import subprocess
+    # subprocess.run("pbcopy", universal_newlines=True, input=repr(selection))
+    # _SnippetDefinition(-1,duplicatesnippet,"other description",)
+
+    return None
 
 
 def _select_and_create_file_to_edit(potentials: Set[str]) -> str:
