@@ -63,7 +63,7 @@ def _show_user_warning(msg):
 
 def _edit_snippet(snippet):
     [ filepath, lineno ] = snippet.location.split(":")
-    vim.command('tabe ' + '+' + lineno + ' ' + filepath)
+    vim.command('silent tabe ' + '+' + lineno + ' ' + filepath)
     # vim.command('sp ' + '+' + lineno + ' ' + filepath)
     vim.command('stopinsert')
 
