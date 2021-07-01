@@ -71,6 +71,10 @@ def _edit_all(snippets):
     for s in snippets:
         _edit_snippet(s)
 
+def _edit_all_files(files):
+    for f in files:
+        vim.command('silent tabe ' + f)
+
 def _ask_snippets(snippets):
     """Given a list of snippets, ask the user which one they want to use, and
     return it."""
@@ -109,7 +113,11 @@ def _select_and_create_file_to_edit(potentials: Set[str]) -> str:
             "%s %i: %s" % ("*" if exists else " ", i, escape(fn, "\\"))
             for i, (fn, exists) in enumerate(zip(files, exists), 1)
         ]
-        file_to_edit = _ask_user(files, formatted)
+        file_to_edit = _ask_user(files, ["0: EDIT ALL IN SEPARATE TABS", *formatted])
+        if file_to_edit == 'SPECIAL':
+            _edit_all_files(files)
+            return ""
+            
         if file_to_edit is None:
             return ""
     else:
