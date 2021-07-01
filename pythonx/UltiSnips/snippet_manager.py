@@ -40,7 +40,7 @@ def _ask_user(a, formatted):
 
         if rv is None:
             return None
-        if rv is '0': # specifically for the special option
+        if rv == '0': # specifically for the special option
             return 'SPECIAL'
         rv = int(rv)
         if rv > len(a):
@@ -84,7 +84,7 @@ def _ask_snippets(snippets):
     # return _ask_user(snippets, display)
 
     selection = _ask_user(snippets, ["0: VIEW ALL IN SEPARATE TABS", *display])
-    if selection is "SPECIAL":
+    if selection == "SPECIAL":
         _edit_all(snippets)
         return None # nothing else to do
     else:
