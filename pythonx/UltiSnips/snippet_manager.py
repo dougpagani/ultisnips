@@ -70,10 +70,12 @@ def _edit_snippet(snippet):
 def _edit_all(snippets):
     for s in snippets:
         _edit_snippet(s)
+    vim.command('echom "TIP: to close all: :tabo[nly]"')
 
 def _edit_all_files(files):
     for f in files:
         vim.command('silent tabe ' + f)
+    vim.command('echom "TIP: to close all: :tabo[nly]"')
 
 def _ask_snippets(snippets):
     """Given a list of snippets, ask the user which one they want to use, and
