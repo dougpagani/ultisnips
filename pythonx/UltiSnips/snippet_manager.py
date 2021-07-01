@@ -33,7 +33,7 @@ def _ask_user(a, formatted):
     None."""
     try:
         rv = vim_helper.eval("inputlist(%s)" % vim_helper.escape(formatted))
-        if rv is None or rv == "0":
+        if rv is None:
             return None
         rv = int(rv)
         if rv > len(a):
@@ -59,6 +59,11 @@ def _edit_snippet(snippet):
     vim.command('tabe ' + '+' + lineno + ' ' + filepath)
     # vim.command('sp ' + '+' + lineno + ' ' + filepath)
     vim.command('stopinsert')
+
+def _edit_all(snippets):
+    for s in snippets:
+        _edit_snippet(s)
+
 def _ask_snippets(snippets):
     """Given a list of snippets, ask the user which one they want to use, and
     return it."""
@@ -66,7 +71,11 @@ def _ask_snippets(snippets):
         "%i: %s (%s)" % (i + 1, escape(s.description, "\\"), escape(s.location, "\\"))
         for i, s in enumerate(snippets)
     ]
-    return _ask_user(snippets, display)
+
+
+    # return _ask_user(snippets, display)
+    # return _ask_user(["VIEW ALL", *snippets], ["0: VIEW ALL IN SEPARATE TABS", *display])
+    return _ask_user([*snippets, "VIEW ALL"], [*display, "{+1}: VIEW ALL IN SEPARATE TABS"])
 
 
 def _select_and_create_file_to_edit(potentials: Set[str]) -> str:
@@ -259,8 +268,15 @@ class SnippetManager:
 
         if len(snippets) > 1:
             snippet = _ask_snippets(snippets)
+            # import subprocess
+            # subprocess.run("pbcopy", universal_newlines=True, input=repr(snippet))
         else:
             snippet = snippets[0]
+
+        # The special option was selected
+        if snippet == "VIEW ALL":
+            _edit_all(snippets)
+            return True
 
         if not snippet:
             return True
