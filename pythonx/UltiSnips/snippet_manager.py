@@ -33,6 +33,8 @@ def _ask_user(a, formatted):
     None."""
     try:
         rv = vim_helper.eval("inputlist(%s)" % vim_helper.escape(formatted))
+        import subprocess
+        subprocess.run("pbcopy", universal_newlines=True, input=repr(rv))
         if rv is None:
             return None
         rv = int(rv)
