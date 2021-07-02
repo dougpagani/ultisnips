@@ -34,8 +34,8 @@ def _ask_user(a, formatted):
     try:
         rv = vim_helper.eval("inputlist(%s)" % vim_helper.escape(formatted))
 
-        import subprocess
-        subprocess.run("pbcopy", universal_newlines=True, input=repr(rv))
+        # import subprocess
+        # subprocess.run("pbcopy", universal_newlines=True, input=repr(rv))
         #> '0'
 
         if rv is None:
