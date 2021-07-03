@@ -40,12 +40,12 @@ def _ask_user(a, formatted):
 
         if rv is None:
             return None
-        if rv == '0': # specifically for the special option
+        if rv == '1': # dont use this; it is implictly given after the menu is escaped
             return 'SPECIAL'
         rv = int(rv)
-        if rv > len(a):
-            rv = len(a)
-        return a[rv - 1]
+        if rv > len(a) + 1: # need to add one since we've added an option
+            rv = len(a) + 1
+        return a[rv - 2] # -1 for index, -1 for SPECIAL's offset
     except vim_helper.error:
         # Likely "invalid expression", but might be translated. We have no way
         # of knowing the exact error, therefore, we ignore all errors silently.
@@ -81,7 +81,7 @@ def _ask_snippets(snippets):
     """Given a list of snippets, ask the user which one they want to use, and
     return it."""
     display = [
-        "%i: %s (%s)" % (i + 1, escape(s.description, "\\"), escape(s.location, "\\"))
+        "%i: %s (%s)" % (i + 2, escape(s.description, "\\"), escape(s.location, "\\"))
         for i, s in enumerate(snippets)
     ]
 
@@ -89,7 +89,7 @@ def _ask_snippets(snippets):
     # original:
     # return _ask_user(snippets, display)
 
-    selection = _ask_user(snippets, ["0: VIEW ALL IN SEPARATE TABS", *display])
+    selection = _ask_user(snippets, ["1: VIEW ALL IN SEPARATE TABS", *display])
     if selection == "SPECIAL":
         _edit_all(snippets)
         return None # nothing else to do
@@ -106,16 +106,17 @@ def _ask_snippets(snippets):
 
 def _select_and_create_file_to_edit(potentials: Set[str]) -> str:
     assert len(potentials) >= 1
+    SPECIAL_OFFSET = 1
 
     file_to_edit = ""
     if len(potentials) > 1:
         files = sorted(potentials)
         exists = [os.path.exists(f) for f in files]
         formatted = [
-            "%s %i: %s" % ("*" if exists else " ", i, escape(fn, "\\"))
+            "%s %i: %s" % ("*" if exists else " ", i + SPECIAL_OFFSET, escape(fn, "\\"))
             for i, (fn, exists) in enumerate(zip(files, exists), 1)
         ]
-        file_to_edit = _ask_user(files, ["0: EDIT ALL IN SEPARATE TABS", *formatted])
+        file_to_edit = _ask_user(files, ["1: EDIT ALL IN SEPARATE TABS", *formatted])
         if file_to_edit == 'SPECIAL':
             _edit_all_files(files)
             return ""
